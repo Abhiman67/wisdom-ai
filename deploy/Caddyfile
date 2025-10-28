@@ -1,0 +1,23 @@
+{
+  # Optional: email for Let's Encrypt notifications
+  # email you@example.com
+}
+
+# Replace with your real domain, e.g., wisdom.yourdomain.com
+{$DOMAIN} {
+  encode zstd gzip
+
+  @static {
+    path /favicon.ico
+    path /robots.txt
+    path /manifest.json
+    path /sw.js
+    path /workbox-*
+  }
+
+  # Proxy everything to Next.js web service
+  reverse_proxy web:3000 {
+    header_up X-Forwarded-Proto {scheme}
+    header_up X-Forwarded-Host {host}
+  }
+}
