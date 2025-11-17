@@ -1,23 +1,32 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const PROTECTED_PREFIXES = ['/daily-verse', '/chat', '/saved', '/profile', '/admin']
+const PROTECTED_PREFIXES = ['/daily-verse', '/chat', '/saved', '/profile', '/admin', '/dashboard', '/collections', '/reading-plans', '/notifications']
+const PUBLIC_PATHS = ['/welcome', '/login', '/signup', '/forgot-password', '/api']
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
-  const token = req.cookies.get('token')?.value
-
-  const isProtected = PROTECTED_PREFIXES.some(p => pathname.startsWith(p))
-  const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/signup')
-
-  if (isProtected && !token) {
-    const url = new URL('/login', req.url)
-    url.searchParams.set('next', pathname)
-    return NextResponse.redirect(url)
+  
+  // Allow public paths
+  if (PUBLIC_PATHS.some(path => pathname.startsWith(path))) {
+    return NextResponse.next()
   }
-  if (isAuthPage && token) {
-    return NextResponse.redirect(new URL('/daily-verse', req.url))
+  
+  // Check if path needs protection
+  const needsAuth = PROTECTED_PREFIXES.some(prefix => pathname.startsWith(prefix))
+  
+  if (needsAuth) {
+    const token = req.cookies.get('token')?.value
+    
+    if (!token) {
+      // Redirect to login with return URL
+      const url = req.nextUrl.clone()
+      url.pathname = '/login'
+      url.searchParams.set('from', pathname)
+      return NextResponse.redirect(url)
+    }
   }
+  
   return NextResponse.next()
 }
 

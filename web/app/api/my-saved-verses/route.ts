@@ -3,10 +3,14 @@ import { cookies } from 'next/headers'
 export async function GET() {
   try {
     const token = cookies().get('token')?.value
-    if (!token) return new Response('Unauthorized', { status: 401 })
+    // Authentication disabled - allow access without token
     const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'
+    const headers: HeadersInit = {}
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
     const res = await fetch(`${apiBase}/my-saved-verses`, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers
     })
     const data = await res.json().catch(() => ({}))
     return new Response(JSON.stringify(data), { status: res.status, headers: { 'Content-Type': 'application/json' } })

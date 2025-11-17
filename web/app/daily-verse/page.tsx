@@ -1,5 +1,4 @@
 import { cookies } from 'next/headers'
-import { AppShell } from '@/components/shell/app-shell'
 import { DailyVerseResponse } from '@/types/api'
 import DailyVerseClient from './daily-verse-client'
 
@@ -19,18 +18,5 @@ export default async function DailyVersePage() {
     // swallow to render error UI below
   }
 
-  return (
-    <AppShell>
-      <div className="relative">
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-violet-500/10 via-transparent to-transparent" />
-      </div>
-      <div className="container py-8">
-        <h1 className="mb-6 text-2xl font-semibold">Your daily verse</h1>
-        {!data && (
-          <div className="rounded-md border p-6">Failed to load daily verse.</div>
-        )}
-        {data && <DailyVerseClient initialData={data} />}
-      </div>
-    </AppShell>
-  )
+  return <DailyVerseClient initialData={data} />
 }

@@ -1,6 +1,7 @@
 import './globals.css'
 import { ReactQueryProvider } from '@/components/providers/react-query-provider'
 import { ThemeProvider } from '@/components/providers/theme-provider'
+import { ErrorBoundary } from '@/components/error-boundary'
 import { Toaster } from 'sonner'
 import type { Metadata, Viewport } from 'next'
 
@@ -39,12 +40,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ReactQueryProvider>
-            {children}
-            <Toaster richColors theme="system" />
-          </ReactQueryProvider>
-        </ThemeProvider>
+        <ErrorBoundary>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <ReactQueryProvider>
+              {children}
+              <Toaster richColors theme="system" />
+            </ReactQueryProvider>
+          </ThemeProvider>
+        </ErrorBoundary>
       </body>
     </html>
   )

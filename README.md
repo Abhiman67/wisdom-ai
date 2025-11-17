@@ -1,3 +1,67 @@
+# Wisdom-AI — Bhagavad Gita local pipeline (toy)
+
+This scaffold prepares your provided Bhagavad Gita CSV for training, builds embeddings for retrieval, and contains a tiny fine-tune example (GPT-2 small) plus a minimal Flask chat server that: retrieves relevant verses, generates a short answer with the fine-tuned model, and logs sentiment + metadata for admin monitoring.
+
+This is intentionally a lightweight, local-first setup for experimentation. For production / larger models see the section "Next steps" below.
+
+Quick commands (macOS zsh)
+
+1) Create a virtualenv and install dependencies
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip
+pip install -r requirements.txt
+```
+
+2) Prepare data (assumes your CSV is at the same path you already have):
+
+```bash
+python scripts/data_prep.py \
+  --csv /Users/abhishek/Desktop/wisdom-ai-main/Bhagwad_Gita.csv \
+  --out_dir data
+```
+
+This creates `data/passages.jsonl` (one verse per line) and `data/instruct.jsonl` (simple prompt/completion pairs for toy fine-tuning).
+
+3) Build embeddings + FAISS index
+
+```bash
+python scripts/embed_and_faiss.py --passages data/passages.jsonl --index_dir data
+```
+
+4) (Toy) fine-tune GPT-2 small — this is intentionally tiny so it runs on CPU (slow) or faster on GPU/Colab.
+
+```bash
+python scripts/train_toy.py --data data/instruct.jsonl --output_dir models/gpt2-bhagavad-toy --epochs 1
+```
+
+5) Run the minimal Flask chat server
+
+```bash
+python scripts/serve_chat.py --model_dir models/gpt2-bhagavad-toy --faiss_dir data --host 0.0.0.0 --port 7860
+```
+
+Then POST to `http://localhost:7860/chat` with JSON `{"user_id":"user1","message":"What is dharma?"}`.
+
+What this scaffold includes
+- `scripts/data_prep.py`: CSV -> passages + instruction tuning JSONL
+- `scripts/embed_and_faiss.py`: builds sentence-transformers embeddings and FAISS index
+- `scripts/train_toy.py`: tiny Hugging Face Trainer fine-tune loop for GPT-2
+- `scripts/serve_chat.py`: Flask server with retrieval, generation, sentiment analysis and admin logging
+- `requirements.txt` with pinned lightweight packages for local use
+
+Important notes
+- The Sanskrit original is public domain, but many modern English translations are copyrighted. Make sure you have rights for any translation included in your CSV. This scaffold will treat whatever is in your CSV as allowed data. If you did not provide a public-domain translation, get permission or remove the translation before training or distributing models.
+- Fine-tuning larger models (Llama2, Mistral, 7B+) requires a GPU with substantial VRAM or cloud resources and different tooling (PEFT/LoRA). I can add that flow once you tell me available compute.
+
+Next steps I can do for you
+- Add LoRA/PEFT training recipes for a chosen open-weight base model (if you have a GPU)
+- Create a nicer web UI (Streamlit / React) with per-user chat history and admin dashboard
+- Add user authentication and a simple admin UI to view sentiment/time-series and flagged conversations
+
+If you want me to proceed: tell me whether you have a GPU (and VRAM), and whether the CSV includes copyrighted translations or only public-domain Sanskrit.
 # Wisdom AI — Development README
 
 Short guide to get new contributors up and running with the Wisdom AI project (backend + frontend).

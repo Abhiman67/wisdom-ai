@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
 
 const nav = [
+  { href: '/dashboard', label: 'Home' },
   { href: '/daily-verse', label: 'Daily verse' },
   { href: '/chat', label: 'Chat' },
   { href: '/saved', label: 'Saved' },
@@ -32,7 +33,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     try { await apiClient.post('/logout', {}) } catch {}
-    router.push('/login')
+    router.push('/welcome')
   }
 
   return (
@@ -40,7 +41,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-10 border-b bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/50">
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-violet-500/10 to-transparent" />
         <div className="container flex h-16 items-center justify-between gap-4">
-          <Link href="/daily-verse" className="bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text font-semibold tracking-tight text-transparent">
+          <Link href="/dashboard" className="bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text font-semibold tracking-tight text-transparent">
             Wisdom AI
           </Link>
           <nav className="hidden gap-1 md:flex">
@@ -60,12 +61,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-3">
             {process.env.NODE_ENV === 'development' && <HealthIndicator />}
             <ThemeToggle />
-            {/* On protected pages AppShell is used, so show Logout by default */}
-            {pathname?.startsWith('/login') || pathname?.startsWith('/signup') ? (
-              <Button asChild variant="outline" size="sm"><Link href="/login">Login</Link></Button>
-            ) : (
-              <Button onClick={logout} variant="outline" size="sm" className="hover:opacity-90">Logout</Button>
-            )}
           </div>
         </div>
       </header>

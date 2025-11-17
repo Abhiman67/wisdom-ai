@@ -33,7 +33,7 @@ export default function LoginPage() {
       setLoading(true)
       // Call Next API route which sets httpOnly auth cookie
       await apiClient.post('/login', { email: data.email, password: data.password, remember: data.remember })
-      router.push('/daily-verse')
+      router.push('/dashboard')
     } catch (e: any) {
       alert(e?.message ?? 'Login failed')
     } finally {
@@ -42,60 +42,72 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-violet-500/20 via-transparent to-transparent" />
-      <div className="container flex items-center justify-center py-8">
-      <Card className="w-full max-w-md backdrop-blur supports-[backdrop-filter]:bg-background/80">
-        <CardHeader>
-          <CardTitle>Welcome to Wisdom AI</CardTitle>
-          <CardDescription>Sign in to continue</CardDescription>
+    <main className="relative flex min-h-screen items-center justify-center bg-gradient-to-br from-[#0d1025] via-[#161936] to-[#1f1a36]">
+      {/* Animated background orbs */}
+      <div className="pointer-events-none absolute inset-0 opacity-40">
+        <div className="absolute top-20 left-20 h-96 w-96 rounded-full bg-orange-500/30 blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-20 h-96 w-96 rounded-full bg-purple-500/30 blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+      
+      <div className="container relative z-10 flex items-center justify-center py-8">
+      <Card className="w-full max-w-md border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+        <CardHeader className="space-y-2">
+          <div className="flex items-center justify-center mb-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 text-xl font-bold text-white shadow-lg">
+              W
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-bold text-center bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">Welcome Back</CardTitle>
+          <CardDescription className="text-center text-white/60">Sign in to continue your spiritual journey</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-white/90">Email</Label>
               <Input
                 id="email"
                 type="email"
                 autoComplete="email"
+                placeholder="you@example.com"
                 aria-invalid={!!errors.email}
                 aria-describedby={errors.email ? 'email-error' : undefined}
                 {...register('email')}
-                className="mt-1"
+                className="mt-2 bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 focus:ring-orange-500/20"
               />
-              {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>}
+              {errors.email && <p className="mt-1.5 text-sm text-red-400">{errors.email.message}</p>}
             </div>
             <div>
-              <Label htmlFor="password">Password</Label>
-              <div className="relative mt-1">
+              <Label htmlFor="password" className="text-white/90">Password</Label>
+              <div className="relative mt-2">
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
+                  placeholder="••••••••"
                   aria-invalid={!!errors.password}
                   aria-describedby={errors.password ? 'password-error' : undefined}
                   {...register('password')}
-                  className="pr-10"
+                  className="pr-10 bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 focus:ring-orange-500/20"
                 />
                 <button
                   type="button"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   onClick={() => setShowPassword((s) => !s)}
-                  className="absolute inset-y-0 right-2 flex items-center text-muted-foreground hover:text-foreground"
+                  className="absolute inset-y-0 right-2 flex items-center text-white/40 hover:text-white/70 transition"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-              {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>}
+              {errors.password && <p className="mt-1.5 text-sm text-red-400">{errors.password.message}</p>}
             </div>
             <div className="flex items-center justify-between">
-              <label className="inline-flex items-center gap-2 text-sm">
-                <input type="checkbox" className="h-4 w-4 rounded border" {...register('remember')} />
+              <label className="inline-flex items-center gap-2 text-sm text-white/80 cursor-pointer">
+                <input type="checkbox" className="h-4 w-4 rounded border-white/20 bg-white/5 text-orange-500 focus:ring-orange-500/20" {...register('remember')} />
                 Remember me
               </label>
-              <Link href="/forgot-password" className="text-sm text-primary hover:underline">Forgot password?</Link>
+              <Link href="/forgot-password" className="text-sm text-orange-400 hover:text-orange-300 transition">Forgot password?</Link>
             </div>
-            <Button disabled={loading} className="w-full">
+            <Button disabled={loading} className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-semibold py-6 shadow-lg hover:shadow-xl transition-all">
               {loading ? (
                 <span className="inline-flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" /> Signing in…
@@ -103,7 +115,7 @@ export default function LoginPage() {
               ) : 'Sign in'}
             </Button>
           </form>
-          <p className="mt-4 text-sm">Don&apos;t have an account? <Link className="text-primary" href="/signup">Sign up</Link></p>
+          <p className="mt-6 text-center text-sm text-white/60">Don&apos;t have an account? <Link className="text-orange-400 hover:text-orange-300 font-semibold transition" href="/signup">Sign up</Link></p>
         </CardContent>
       </Card>
       </div>

@@ -1,23 +1,54 @@
-import { AppShell } from '@/components/shell/app-shell'
-import { Skeleton } from '@/components/ui/skeleton'
-
 export default function Loading() {
   return (
-    <AppShell>
-      <div className="container py-8">
-        <div className="mb-6 h-7 w-40"><Skeleton className="h-7 w-40" /></div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="overflow-hidden rounded-lg border">
-              <Skeleton className="aspect-[1200/630] w-full" />
-              <div className="space-y-3 p-4">
-                <Skeleton className="h-5 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
+    <div className="flex h-screen bg-gradient-to-br from-[#1a1b2e] via-[#1e1f35] to-[#1a1b2e] text-white overflow-hidden">
+      {/* Sidebar Skeleton */}
+      <aside className="hidden md:flex w-64 flex-col border-r border-white/10 bg-gradient-to-b from-[#13141f] to-[#0f1019] flex-shrink-0 shadow-2xl">
+        <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10">
+          <div className="h-10 w-10 rounded-xl bg-white/10 animate-pulse"></div>
+          <div className="flex-1 space-y-2">
+            <div className="h-3 w-24 bg-white/10 rounded animate-pulse"></div>
+            <div className="h-2 w-16 bg-white/10 rounded animate-pulse"></div>
+          </div>
+        </div>
+        <div className="px-4 pt-5 pb-4">
+          <div className="h-11 w-full rounded-xl bg-white/10 animate-pulse"></div>
+        </div>
+        <div className="px-4 space-y-2 flex-1">
+          <div className="h-9 w-full rounded-xl bg-white/5 animate-pulse"></div>
+          <div className="h-9 w-full rounded-xl bg-white/5 animate-pulse"></div>
+          <div className="h-9 w-full rounded-xl bg-white/5 animate-pulse"></div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex flex-1 flex-col min-w-0 relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-purple-500/5 pointer-events-none"></div>
+        <div className="flex-1 overflow-y-auto px-6 py-8 relative z-10">
+          <div className="max-w-6xl mx-auto">
+            <div className="mb-8 space-y-2">
+              <div className="h-10 w-64 bg-white/10 rounded animate-pulse"></div>
+              <div className="h-4 w-48 bg-white/5 rounded animate-pulse"></div>
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
+                <div className="h-6 w-3/4 bg-white/10 rounded animate-pulse"></div>
+                <div className="h-4 w-full bg-white/5 rounded animate-pulse"></div>
+                <div className="h-4 w-5/6 bg-white/5 rounded animate-pulse"></div>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
+                <div className="h-6 w-3/4 bg-white/10 rounded animate-pulse"></div>
+                <div className="h-4 w-full bg-white/5 rounded animate-pulse"></div>
+                <div className="h-4 w-5/6 bg-white/5 rounded animate-pulse"></div>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
+                <div className="h-6 w-3/4 bg-white/10 rounded animate-pulse"></div>
+                <div className="h-4 w-full bg-white/5 rounded animate-pulse"></div>
+                <div className="h-4 w-5/6 bg-white/5 rounded animate-pulse"></div>
               </div>
             </div>
-          ))}
+          </div>
         </div>
-      </div>
-    </AppShell>
+      </main>
+    </div>
   )
 }
