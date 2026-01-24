@@ -58,8 +58,31 @@ export default function NotificationsPage() {
     return (
       <div className="flex h-screen bg-gradient-to-br from-[#1a1b2e] via-[#1e1f35] to-[#1a1b2e] text-white">
         <Sidebar />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-white/60">Loading notifications...</div>
+        <main className="flex-1 overflow-y-auto px-6 py-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <div className="h-8 w-48 bg-white/10 rounded animate-pulse"></div>
+              <div className="flex gap-2">
+                <div className="h-10 w-20 bg-white/10 rounded animate-pulse"></div>
+                <div className="h-10 w-20 bg-white/10 rounded animate-pulse"></div>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="rounded-xl border border-white/10 bg-white/5 p-6 animate-pulse">
+                  <div className="flex items-start gap-4">
+                    <div className="h-10 w-10 rounded-full bg-white/10"></div>
+                    <div className="flex-1 space-y-3">
+                      <div className="h-5 w-full bg-white/10 rounded"></div>
+                      <div className="h-4 w-3/4 bg-white/10 rounded"></div>
+                      <div className="h-3 w-32 bg-white/10 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </main>
       </div>
     )

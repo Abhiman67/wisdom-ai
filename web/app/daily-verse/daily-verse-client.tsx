@@ -54,7 +54,7 @@ export default function DailyVerseClient({ initialData }: { initialData: DailyVe
             <div className="mb-10 text-center">
               <div className="inline-flex items-center gap-2 rounded-full border border-orange-400/30 bg-orange-400/10 px-4 py-2 mb-6 backdrop-blur-sm">
                 <Sunrise className="h-4 w-4 text-orange-400 animate-pulse" />
-                <span className="text-xs font-semibold uppercase tracking-widest text-orange-200">Today's Inspiration</span>
+                <span className="text-xs font-semibold uppercase tracking-widest text-orange-200">Today&apos;s Inspiration</span>
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-3 bg-gradient-to-r from-white via-orange-100 to-pink-100 bg-clip-text text-transparent leading-tight">

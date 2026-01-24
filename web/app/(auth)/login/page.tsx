@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Eye, EyeOff, Loader2 } from 'lucide-react'
-import { apiClient } from '@/lib/api'
+import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -24,6 +24,9 @@ export default function LoginPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const supabase = createClient()
+  
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
     resolver: zodResolver(LoginSchema)
   })
@@ -31,11 +34,22 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     try {
       setLoading(true)
-      // Call Next API route which sets httpOnly auth cookie
-      await apiClient.post('/login', { email: data.email, password: data.password, remember: data.remember })
+      setError(null)
+      
+      const { error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      })
+      
+      if (error) {
+        setError(error.message)
+        return
+      }
+      
       router.push('/dashboard')
+      router.refresh()
     } catch (e: any) {
-      alert(e?.message ?? 'Login failed')
+      setError(e?.message ?? 'Login failed')
     } finally {
       setLoading(false)
     }
@@ -107,6 +121,13 @@ export default function LoginPage() {
               </label>
               <Link href="/forgot-password" className="text-sm text-orange-400 hover:text-orange-300 transition">Forgot password?</Link>
             </div>
+            
+            {error && (
+              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                {error}
+              </div>
+            )}
+            
             <Button disabled={loading} className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-semibold py-6 shadow-lg hover:shadow-xl transition-all">
               {loading ? (
                 <span className="inline-flex items-center gap-2">

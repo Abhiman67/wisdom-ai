@@ -1,36 +1,68 @@
 "use client"
 import { useEffect, useRef, useState } from 'react'
-import { apiClient } from '@/lib/api'
-import { ChatResponse } from '@/types/api'
 import { Markdown } from '@/components/chat/markdown'
 import { Sidebar } from '@/components/shell/sidebar'
 import dynamic from 'next/dynamic'
 const SendIcon = dynamic(() => import('lucide-react').then(m => m.Send), { ssr: false })
 const SparklesIcon = dynamic(() => import('lucide-react').then(m => m.Sparkles), { ssr: false })
 
+interface ChatMessage {
+  role: 'user' | 'assistant'
+  content: string
+}
+
 export default function ChatPage() {
   type Msg = { role: 'user' | 'ai'; text: string; at: number }
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [history, setHistory] = useState<Msg[]>([])
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([])
   const bottomRef = useRef<HTMLDivElement | null>(null)
 
   const send = async () => {
-    if (!message.trim()) return
-    const userText = message
+    if (!message.trim() || loading) return
+    const userText = message.trim()
+    
+    // Add user message to display
     setHistory(h => [...h, { role: 'user', text: userText, at: Date.now() }])
     setMessage('')
+    setLoading(true)
+    
+    // Build history for context
+    const historyForApi = [...chatHistory, { role: 'user' as const, content: userText }]
+    
     try {
-      setLoading(true)
-      const res = await apiClient.post<ChatResponse>('/chat', { message: userText })
-      const combined = `${res.reply}\n\n— ${res.verse_source}`
-      setHistory(h => [...h, { role: 'ai', text: combined, at: Date.now() }])
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          message: userText,
+          history: historyForApi
+        })
+      })
+      
+      const data = await res.json()
+      const aiResponse = data.response || data.reply || "I'm having trouble responding right now."
+      
+      // Update chat history for context
+      setChatHistory([
+        ...historyForApi,
+        { role: 'assistant', content: aiResponse }
+      ])
+      
+      // Add AI response to display
+      setHistory(h => [...h, { role: 'ai', text: aiResponse, at: Date.now() }])
     } catch (e) {
       console.error(e)
-      alert('Failed to send message')
+      setHistory(h => [...h, { role: 'ai', text: "I apologize, but I'm having trouble connecting right now. Please try again.", at: Date.now() }])
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleNewChat = () => {
+    setHistory([])
+    setChatHistory([])
   }
 
   useEffect(() => {
@@ -46,7 +78,7 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-[#1a1b2e] via-[#1e1f35] to-[#1a1b2e] text-white overflow-hidden">
-      <Sidebar onNewChat={() => setHistory([])} showNewChatButton={true} />
+      <Sidebar onNewChat={handleNewChat} showNewChatButton={true} />
 
       {/* Main Chat Area */}
       <main className="flex flex-1 flex-col min-w-0 relative">

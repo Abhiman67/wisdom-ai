@@ -62,8 +62,37 @@ export default function AdminUsersPage() {
     return (
       <div className="flex h-screen bg-gradient-to-br from-[#1a1b2e] via-[#1e1f35] to-[#1a1b2e] text-white">
         <Sidebar />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-white/60">Loading users...</div>
+        <main className="flex-1 overflow-y-auto px-6 py-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-6">
+              <div className="h-8 w-48 bg-white/10 rounded animate-pulse mb-2"></div>
+              <div className="h-4 w-64 bg-white/10 rounded animate-pulse"></div>
+            </div>
+            
+            <div className="mb-6 h-10 w-full max-w-md rounded-lg bg-white/10 animate-pulse"></div>
+            
+            <div className="grid gap-4">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="rounded-xl border border-white/10 bg-white/5 p-6 animate-pulse">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 space-y-3">
+                      <div className="h-5 w-32 bg-white/10 rounded"></div>
+                      <div className="h-4 w-48 bg-white/10 rounded"></div>
+                      <div className="flex gap-4">
+                        <div className="h-4 w-24 bg-white/10 rounded"></div>
+                        <div className="h-4 w-24 bg-white/10 rounded"></div>
+                        <div className="h-4 w-24 bg-white/10 rounded"></div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="h-9 w-24 bg-white/10 rounded"></div>
+                      <div className="h-9 w-9 bg-white/10 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </main>
       </div>
     )

@@ -16,36 +16,40 @@ interface DashboardStats {
 }
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState<DashboardStats | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [stats, setStats] = useState<DashboardStats>({
+    totalSaved: 0,
+    totalChats: 0,
+    streak: 0,
+    todayVerse: null
+  })
+  const [loading, setLoading] = useState({
+    profile: true,
+    verse: true
+  })
 
   useEffect(() => {
-    Promise.all([
-      fetch('/api/profile').then(r => r.json()),
-      fetch('/api/daily-verse-with-save').then(r => r.json())
-    ])
-      .then(([profile, verse]) => {
-        setStats({
+    // Parallel fetching for faster loading
+    fetch('/api/profile')
+      .then(r => r.json())
+      .then(profile => {
+        setStats(prev => ({
+          ...prev,
           totalSaved: profile?.saved_verses?.length || 0,
           totalChats: profile?.chat_history?.length || 0,
-          streak: profile?.streak || 0,
-          todayVerse: verse
-        })
+          streak: profile?.streak || 0
+        }))
       })
       .catch(() => {})
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => setLoading(prev => ({ ...prev, profile: false })))
 
-  if (loading) {
-    return (
-      <div className="flex h-screen bg-gradient-to-br from-[#0d1025] via-[#161936] to-[#1f1a36] text-white overflow-hidden">
-        <Sidebar />
-        <main className="flex flex-1 items-center justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
-        </main>
-      </div>
-    )
-  }
+    fetch('/api/daily-verse-with-save')
+      .then(r => r.json())
+      .then(verse => {
+        setStats(prev => ({ ...prev, todayVerse: verse }))
+      })
+      .catch(() => {})
+      .finally(() => setLoading(prev => ({ ...prev, verse: false })))
+  }, [])
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-[#0d1025] via-[#161936] to-[#1f1a36] text-white overflow-hidden">
@@ -73,37 +77,66 @@ export default function DashboardPage() {
 
             {/* Stats Cards */}
             <div className="mb-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <StatCard
-                icon={<Bookmark className="h-6 w-6" />}
-                label="Saved Verses"
-                value={stats?.totalSaved || 0}
-                gradient="from-orange-500 to-pink-500"
-              />
-              <StatCard
-                icon={<MessageSquare className="h-6 w-6" />}
-                label="Conversations"
-                value={stats?.totalChats || 0}
-                gradient="from-purple-500 to-blue-500"
-              />
-              <StatCard
-                icon={<Calendar className="h-6 w-6" />}
-                label="Day Streak"
-                value={stats?.streak || 0}
-                gradient="from-green-500 to-emerald-500"
-              />
-              <StatCard
-                icon={<Heart className="h-6 w-6" />}
-                label="Favorites"
-                value={stats?.totalSaved || 0}
-                gradient="from-pink-500 to-rose-500"
-              />
+              {loading.profile ? (
+                <>
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="overflow-hidden rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl animate-pulse">
+                      <div className="mb-3 h-12 w-12 rounded-lg bg-white/10"></div>
+                      <div className="h-8 w-16 bg-white/10 rounded mb-2"></div>
+                      <div className="h-4 w-24 bg-white/10 rounded"></div>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <>
+                  <StatCard
+                    icon={<Bookmark className="h-6 w-6" />}
+                    label="Saved Verses"
+                    value={stats.totalSaved}
+                    gradient="from-orange-500 to-pink-500"
+                  />
+                  <StatCard
+                    icon={<MessageSquare className="h-6 w-6" />}
+                    label="Conversations"
+                    value={stats.totalChats}
+                    gradient="from-purple-500 to-blue-500"
+                  />
+                  <StatCard
+                    icon={<Calendar className="h-6 w-6" />}
+                    label="Day Streak"
+                    value={stats.streak}
+                    gradient="from-green-500 to-emerald-500"
+                  />
+                  <StatCard
+                    icon={<Heart className="h-6 w-6" />}
+                    label="Favorites"
+                    value={stats.totalSaved}
+                    gradient="from-pink-500 to-rose-500"
+                  />
+                </>
+              )}
             </div>
 
             {/* Today's Verse Preview */}
-            {stats?.todayVerse && (
+            {loading.verse ? (
               <div className="mb-10">
                 <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white">Today's Verse</h2>
+                  <h2 className="text-2xl font-bold text-white">Today&apos;s Verse</h2>
+                </div>
+                <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl animate-pulse">
+                  <div className="mb-4 h-4 w-32 bg-white/10 rounded"></div>
+                  <div className="space-y-3 mb-4">
+                    <div className="h-4 w-full bg-white/10 rounded"></div>
+                    <div className="h-4 w-5/6 bg-white/10 rounded"></div>
+                    <div className="h-4 w-4/6 bg-white/10 rounded"></div>
+                  </div>
+                  <div className="h-3 w-32 bg-white/10 rounded"></div>
+                </div>
+              </div>
+            ) : stats.todayVerse && (
+              <div className="mb-10">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-white">Today&apos;s Verse</h2>
                   <Link
                     href="/daily-verse"
                     className="flex items-center gap-2 text-sm text-orange-400 transition-colors hover:text-orange-300"
@@ -119,7 +152,7 @@ export default function DashboardPage() {
                     </span>
                   </div>
                   <p className="mb-4 text-xl italic leading-relaxed text-white/90 sm:text-2xl">
-                    "{stats.todayVerse.text?.slice(0, 200) || 'Loading verse...'}..."
+                    &quot;{stats.todayVerse.text?.slice(0, 200) || 'Loading verse...'}&quot;...
                   </p>
                   <p className="text-sm text-white/50">— {stats.todayVerse.source || 'Sacred Text'}</p>
                 </div>

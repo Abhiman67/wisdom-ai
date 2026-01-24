@@ -48,8 +48,39 @@ export default function ReadingPlansPage() {
     return (
       <div className="flex h-screen bg-gradient-to-br from-[#1a1b2e] via-[#1e1f35] to-[#1a1b2e] text-white">
         <Sidebar />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-white/60">Loading reading plans...</div>
+        <main className="flex-1 overflow-y-auto px-6 py-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="mb-8">
+              <div className="h-8 w-48 bg-white/10 rounded animate-pulse mb-2"></div>
+              <div className="h-4 w-64 bg-white/10 rounded animate-pulse"></div>
+            </div>
+            
+            <div className="space-y-8">
+              {[...Array(2)].map((section, i) => (
+                <div key={i}>
+                  <div className="h-6 w-40 bg-white/10 rounded animate-pulse mb-4"></div>
+                  <div className="grid gap-6 md:grid-cols-2">
+                    {[...Array(3)].map((_, j) => (
+                      <div key={j} className="rounded-xl border border-white/10 bg-white/5 p-6 animate-pulse">
+                        <div className="flex items-start gap-4 mb-4">
+                          <div className="h-12 w-12 rounded-lg bg-white/10"></div>
+                          <div className="flex-1 space-y-2">
+                            <div className="h-5 w-40 bg-white/10 rounded"></div>
+                            <div className="h-4 w-24 bg-white/10 rounded"></div>
+                          </div>
+                        </div>
+                        <div className="space-y-2 mb-4">
+                          <div className="h-4 w-full bg-white/10 rounded"></div>
+                          <div className="h-4 w-5/6 bg-white/10 rounded"></div>
+                        </div>
+                        <div className="h-9 w-full bg-white/10 rounded"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </main>
       </div>
     )

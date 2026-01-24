@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { apiClient } from '@/lib/api'
+import { createClient } from '@/lib/supabase/client'
 
 const HomeIcon = dynamic(() => import('lucide-react').then(m => m.Home), { ssr: false })
 const BookOpenIcon = dynamic(() => import('lucide-react').then(m => m.BookOpen), { ssr: false })
@@ -29,11 +29,13 @@ interface SidebarProps {
 export function Sidebar({ userName = "User", userEmail = "", onNewChat, showNewChatButton = false }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
+  const supabase = createClient()
 
   const handleLogout = async () => {
     try {
-      await apiClient.post('/logout')
+      await supabase.auth.signOut()
       router.push('/welcome')
+      router.refresh()
     } catch (e) {
       console.error('Logout failed:', e)
       router.push('/welcome')

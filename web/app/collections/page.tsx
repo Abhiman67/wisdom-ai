@@ -59,8 +59,31 @@ export default function CollectionsPage() {
     return (
       <div className="flex h-screen bg-gradient-to-br from-[#1a1b2e] via-[#1e1f35] to-[#1a1b2e] text-white">
         <Sidebar />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-white/60">Loading collections...</div>
+        <main className="flex-1 overflow-y-auto px-6 py-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <div className="h-8 w-48 bg-white/10 rounded animate-pulse"></div>
+              <div className="h-10 w-40 bg-white/10 rounded animate-pulse"></div>
+            </div>
+            
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="rounded-xl border border-white/10 bg-white/5 p-6 animate-pulse">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="h-12 w-12 rounded-lg bg-white/10"></div>
+                    <div className="flex-1 space-y-2">
+                      <div className="h-5 w-32 bg-white/10 rounded"></div>
+                      <div className="h-4 w-24 bg-white/10 rounded"></div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-4 w-full bg-white/10 rounded"></div>
+                    <div className="h-4 w-3/4 bg-white/10 rounded"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </main>
       </div>
     )

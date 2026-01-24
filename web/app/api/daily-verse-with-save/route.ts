@@ -1,16 +1,46 @@
+import { generateDailyVerse } from '@/lib/gemini'
 import { cookies } from 'next/headers'
 
+// Cache the daily verse for 24 hours
+let cachedVerse: { data: any; timestamp: number } | null = null
+const CACHE_DURATION = 24 * 60 * 60 * 1000 // 24 hours
+
 export async function GET() {
-  const token = cookies().get('token')?.value
-  // Authentication disabled - allow access without token
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'
-  const headers: HeadersInit = {}
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`
+  try {
+    const now = Date.now()
+    
+    // Check if we have a valid cached verse
+    if (cachedVerse && (now - cachedVerse.timestamp) < CACHE_DURATION) {
+      return Response.json(cachedVerse.data)
+    }
+
+    // Generate new verse using Gemini
+    const verse = await generateDailyVerse()
+    
+    const responseData = {
+      id: `verse-${Date.now()}`,
+      text: verse.text,
+      source: verse.source,
+      reflection: verse.reflection,
+      is_saved: false,
+      generated_at: new Date().toISOString()
+    }
+
+    // Cache the verse
+    cachedVerse = { data: responseData, timestamp: now }
+
+    return Response.json(responseData)
+  } catch (error) {
+    console.error('Daily verse error:', error)
+    
+    // Return a fallback verse
+    return Response.json({
+      id: 'fallback-verse',
+      text: "Be still, and know that I am God.",
+      source: "Psalms 46:10",
+      reflection: "In moments of chaos and uncertainty, we are reminded to pause, breathe, and connect with the divine presence.",
+      is_saved: false,
+      generated_at: new Date().toISOString()
+    })
   }
-  const res = await fetch(`${apiBase}/daily-verse-with-save`, {
-    headers
-  })
-  const data = await res.json().catch(() => ({}))
-  return new Response(JSON.stringify(data), { status: res.status, headers: { 'Content-Type': 'application/json' } })
 }

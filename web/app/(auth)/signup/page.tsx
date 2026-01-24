@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
-import { apiClient } from '@/lib/api'
+import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -32,6 +32,10 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+  const supabase = createClient()
+  
   const { register, handleSubmit, watch, formState: { errors } } = useForm<SignupForm>({
     resolver: zodResolver(SignupSchema)
   })
@@ -39,10 +43,31 @@ export default function SignupPage() {
   const onSubmit = async (data: SignupForm) => {
     try {
       setLoading(true)
-      await apiClient.post('/signup', { name: data.name, email: data.email, password: data.password })
-      router.push('/dashboard')
+      setError(null)
+      
+      const { error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            name: data.name,
+          },
+        },
+      })
+      
+      if (error) {
+        setError(error.message)
+        return
+      }
+      
+      setSuccess(true)
+      // Auto redirect after signup
+      setTimeout(() => {
+        router.push('/dashboard')
+        router.refresh()
+      }, 1500)
     } catch (e: any) {
-      alert(e?.message ?? 'Signup failed')
+      setError(e?.message ?? 'Signup failed')
     } finally {
       setLoading(false)
     }

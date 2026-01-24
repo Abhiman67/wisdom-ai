@@ -54,8 +54,36 @@ export default function AdminModerationPage() {
     return (
       <div className="flex h-screen bg-gradient-to-br from-[#1a1b2e] via-[#1e1f35] to-[#1a1b2e] text-white">
         <Sidebar />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-white/60">Loading moderation queue...</div>
+        <main className="flex-1 overflow-y-auto px-6 py-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-6">
+              <div className="h-8 w-56 bg-white/10 rounded animate-pulse mb-2"></div>
+              <div className="h-4 w-80 bg-white/10 rounded animate-pulse"></div>
+            </div>
+            
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="rounded-xl border border-orange-500/30 bg-white/5 p-6 animate-pulse">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <div className="h-10 w-10 rounded-lg bg-white/10"></div>
+                        <div className="h-5 w-32 bg-white/10 rounded"></div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="h-4 w-full bg-white/10 rounded"></div>
+                        <div className="h-4 w-3/4 bg-white/10 rounded"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex gap-3 pt-4 border-t border-white/10">
+                    <div className="h-9 w-24 bg-white/10 rounded"></div>
+                    <div className="h-9 w-24 bg-white/10 rounded"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </main>
       </div>
     )
