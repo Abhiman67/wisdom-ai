@@ -1,0 +1,17 @@
+transformers>=4.35.0
+datasets
+accelerate
+bitsandbytes
+peft
+safetensors
+sentencepiece
+tokenizers
+huggingface-hub
+evaluate
+gradio>=4.0.0
+sentence-transformers>=2.2.2
+tqdm>=4.65.0
+fastapi>=0.110.0
+uvicorn>=0.24.0
+pydantic>=2.7.0
+sqlalchemy>=2.0.0
