@@ -1,0 +1,28 @@
+.venv/
+__pycache__/
+*.pyc
+*.log
+*.db
+rag_index.pt
+rag_index_meta.json
+last_run.log
+evaluation_results*.csv
+
+# Large training artifacts
+lora_*/
+checkpoint-*/
+cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+node_modules/
+web/node_modules/
+web/.next/
+web/out/
+web/.turbo/
+web/.cache/
+web/.vercel/
+hf_wisdom_ai_lora/
+hf_wisdom_ai_space/

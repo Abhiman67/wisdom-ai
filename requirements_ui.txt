@@ -1,0 +1,5 @@
+gradio>=4.0.0
+tqdm>=4.65.0
+sentence-transformers>=2.2.2
+# Deprecated: UI dependencies have been merged into requirements.txt.
+# Please install from the root requirements.txt only.
