@@ -21,6 +21,7 @@ export function MoodChart({ days = 30 }: { days?: number }) {
 
   useEffect(() => {
     loadMoodHistory()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [days])
 
   const loadMoodHistory = async () => {

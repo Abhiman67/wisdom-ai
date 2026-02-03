@@ -72,6 +72,7 @@ export default function LandingPage() {
     }, 5000)
     
     return () => clearInterval(testimonialTimer)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
   useEffect(() => {

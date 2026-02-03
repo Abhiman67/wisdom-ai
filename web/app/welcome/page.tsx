@@ -89,6 +89,7 @@ export default function LandingPage() {
     }, 5000)
     
     return () => clearInterval(testimonialTimer)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
   useEffect(() => {
@@ -98,6 +99,7 @@ export default function LandingPage() {
     }, 6000)
     
     return () => clearInterval(conversationTimer)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
   useEffect(() => {
@@ -192,7 +194,7 @@ export default function LandingPage() {
   
   const sampleConversations = [
     {
-      question: "I'm feeling anxious about tomorrow's presentation",
+      question: "I'm feeling anxious about tomorrow&apos;s presentation",
       response: "Let me share some comforting wisdom. In Philippians 4:6-7, we're reminded: 'Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.' Your preparation meets divine peace—you're ready."
     },
     {
@@ -519,7 +521,7 @@ export default function LandingPage() {
               <Crown className="h-8 w-8 text-orange-400" />
               <h2 className="text-3xl font-semibold lg:text-4xl">Simple, Transparent Pricing</h2>
             </div>
-            <p className="text-white/70 max-w-2xl mx-auto">Start free, upgrade when you're ready</p>
+            <p className="text-white/70 max-w-2xl mx-auto">Start free, upgrade when you&apos;re ready</p>
           </div>
 
           <div className="grid gap-6 lg:grid-cols-3 max-w-6xl mx-auto">
@@ -778,7 +780,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">No Tracking</h3>
-              <p className="text-sm text-white/70">We don't track your browsing or sell your data to advertisers</p>
+              <p className="text-sm text-white/70">We don&apos;t track your browsing or sell your data to advertisers</p>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur text-center">
