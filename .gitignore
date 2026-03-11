@@ -8,6 +8,11 @@ rag_index_meta.json
 last_run.log
 evaluation_results*.csv
 
+# Environment variable files (never commit secrets)
+.env
+.env.local
+.env.*.local
+
 # Large training artifacts
 lora_*/
 checkpoint-*/
