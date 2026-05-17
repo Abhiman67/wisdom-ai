@@ -162,4 +162,4 @@ The current implementation is still a mix of polished UI and mock/demo-style bac
 - Base model: Mistral-7B-Instruct-v0.2, Apache 2.0
 - Dataset: Bhagavad Gita verse dataset used for instruction tuning and evaluation
 
-If you want, I can also rewrite `QUICK_START.md` and `STATUS.md` so the whole doc set feels consistent in the same voice.
+MADE BY ABHISHEK CHHANDAK
